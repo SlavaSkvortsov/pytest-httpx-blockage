@@ -5,6 +5,7 @@ from _pytest.config.argparsing import Parser
 from _pytest.fixtures import SubRequest
 
 from pytest_httpx_blockage.blockage import blockage
+from pytest_httpx_blockage.contextvar import is_blockage_enabled
 
 
 def pytest_addoption(parser: Parser) -> None:
@@ -34,7 +35,7 @@ def pytest_addoption(parser: Parser) -> None:
     )
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(scope='session', autouse=True)
 def _blockage(request: SubRequest) -> Generator[None, None, None]:
     config = request.config
     blockage_enabled = config.getini('blockage-httpx') or config.getoption('--blockage-httpx')
@@ -43,11 +44,19 @@ def _blockage(request: SubRequest) -> Generator[None, None, None]:
         yield
         return
 
+    with blockage():
+        yield
+
+
+@pytest.fixture(autouse=True)
+def _blockage_disable_mark(request: SubRequest) -> Generator[None, None, None]:
+    config = request.config
     disable_mark_name = config.getini('disable-blockage-mark') or config.getoption('--disable-blockage-mark')
     mark = request.node.get_closest_marker(disable_mark_name or 'integration')
     if mark is not None:
-        yield
-        return
+        is_blockage_enabled.set(False)
 
-    with blockage():
+    try:
         yield
+    finally:
+        is_blockage_enabled.set(True)
