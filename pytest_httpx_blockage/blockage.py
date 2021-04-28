@@ -10,8 +10,8 @@ from httpcore._types import URL, Headers
 from pytest_httpx_blockage.contextvar import is_blockage_enabled
 from pytest_httpx_blockage.exceptions import RequestBlockageException
 
-base_request_sync = SyncHTTPConnection.request
-base_request_async = AsyncHTTPConnection.arequest
+base_request_sync = SyncHTTPConnection.handle_request
+base_request_async = AsyncHTTPConnection.handle_async_request
 
 
 def side_effect(
@@ -54,8 +54,8 @@ async def async_side_effect(
 
 @contextmanager
 def blockage() -> Generator[None, None, None]:
-    patch_sync = patch.object(SyncHTTPConnection, 'request', autospec=True)
-    patch_async = patch.object(AsyncHTTPConnection, 'arequest', autospec=True)
+    patch_sync = patch.object(SyncHTTPConnection, 'handle_request', autospec=True)
+    patch_async = patch.object(AsyncHTTPConnection, 'handle_async_request', autospec=True)
 
     with patch_sync as mocked_sync, patch_async as mocked_async:
         mocked_sync.side_effect = side_effect
