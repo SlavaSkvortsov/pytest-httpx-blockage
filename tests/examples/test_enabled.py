@@ -4,7 +4,7 @@ from httpx import AsyncClient, Client
 
 from pytest_httpx_blockage.exceptions import RequestBlockageException
 
-URL = 'https://google.com'
+URL = 'https://httpbin.org/status/200'
 
 
 @pytest.mark.asyncio()
