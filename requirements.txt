@@ -1,2 +1,2 @@
-httpx==0.18.0
-pytest==6.2.3
+httpx==0.21.0
+pytest==6.2.5

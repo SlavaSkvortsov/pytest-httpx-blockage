@@ -1,6 +1,6 @@
 from httpx import Client
 
-URL = 'https://google.com'
+URL = 'https://httpbin.org/status/200'
 
 
 def test_integration() -> None:
