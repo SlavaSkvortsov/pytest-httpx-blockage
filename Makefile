@@ -14,6 +14,6 @@ isort:
 	isort .
 
 safety:
-	safety check --bare --full-report -r requirements.txt -r requirements-dev.txt
+	safety check --bare -r requirements.txt -r requirements-dev.txt
 
 check: isort flake8 mypy safety test

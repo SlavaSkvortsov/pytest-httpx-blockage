@@ -7,7 +7,7 @@ from _pytest.pytester import Pytester
 
 @pytest.fixture()
 def read_conftest(request: SubRequest) -> str:
-    return pathlib.Path(request.config.rootdir, 'pytest_httpx_blockage/plugin.py').read_text()
+    return pathlib.Path(request.config.rootdir, 'pytest_httpx_blockage/plugin.py').read_text()  # type: ignore
 
 
 def test_enabled(pytester: Pytester, read_conftest: str) -> None:
